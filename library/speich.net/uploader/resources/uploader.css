@@ -1,0 +1,107 @@
+
+#snetUploader {
+	width: 400px;
+	max-height: 600px;
+	overflow: hidden;
+}
+
+#snetUploader .dijitDialogTitleBar {
+	height: 16px;
+}
+
+#snetUploader .dijitDialogPaneContent {
+	max-height: inherit;
+	overflow: hidden;
+}
+
+#pbwOverallCont .dijitProgressBar {
+	line-height: 2.5;
+	height: 25px
+}
+
+#pbwOverallCont {
+	height: 58px; /* + 1px border-bottom */
+	padding: 0;
+}
+
+#pbwBarsCont {
+	background-color: #fafafa;
+	max-height: 496px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.pbwBar {
+	padding: 4px;
+	border-bottom: 1px solid #ccc;
+}
+
+.pbwButton {
+	display: none;
+	vertical-align: middle;
+	margin-right: 4px;
+	cursor: pointer;
+	text-decoration: underline;
+	color: #005197;
+}
+
+.pbwThumbCanvas {
+	border-color: #eeeeee;
+	border-style: solid;
+	border-width: 10px 4px;
+	border-radius: 4px;
+	box-shadow: inset 1px 1px 3px rgba(120, 120, 120, 0.4), 0 0 1px rgba(120, 120, 120, 1);
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	line-height: 0;
+}
+
+.pbwThumb {
+	float: left;
+	margin: 0 8px 0 0;
+	width: 64px;
+	min-height: 64px;
+}
+
+.pbwBarContRight:after {
+	content: ".";
+	display: block;
+	clear: both;
+	line-height: 0;
+	height: 0;
+	font-size: 0;
+}
+
+.pbwBarTileDone {
+	background-color: #00bb00 !important;
+}
+
+.pbwBarTileError {
+	background-color: #bb0000 !important;
+}
+
+.pbwBarTileCanceled {
+	background-color: #ccc !important;
+}
+
+.errMsg {
+	color: #ff0000;
+}
+
+.dijitProgressBarEmpty {
+	border: none;
+}
+
+.dijitDialog {
+	width: 300px;
+}
+
+.pbwDialogConfirm {
+	border-top: 1px solid #ccc;
+	padding: 3px;
+	background-color: #fff;
+}
+
+.pbwDialogConfirm .dijitCheckBox {
+	margin: 0.2em;
+}
