@@ -43,7 +43,7 @@ var djConfig = {
 	useCommentedJson: true
 };
 </script>
-<script src="../../library/dojo/dojo/dojo.js" type="text/javascript"></script>
+<script src="library/dojo/dojo/dojo.js" type="text/javascript"></script>
 <script type="text/javascript">
 dojo.require('snet.Uploader');
 
