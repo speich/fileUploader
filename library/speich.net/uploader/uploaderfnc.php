@@ -88,7 +88,7 @@ switch ($fnc) {
 	case 'getNumWrittenBytes':
 		$fileName = isset($_GET['fileName']) ? $_GET['fileName'] : null;
 		// Not possible in demo, since nothing was written to disk...
-
+/*
 		if ($fileName) {
 			if (file_exists($uploadDir.$fileName)) {
 				echo json_encode(array('numWritten' => filesize($uploadDir.$fileName)));
@@ -101,7 +101,7 @@ switch ($fnc) {
 		else {
 			header($protocol.' 404 Not Found');
 			exit('No file name provided.');
-		}
+		}*/
 		break;
 }
 ?>

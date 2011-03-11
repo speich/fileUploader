@@ -34,7 +34,7 @@
 Works with Mozilla Firefox 3.6 and Google Chrome 7.</p>
 <div id="dropTarget"><p>Drop files from your desktop here</p></div>
 <p>Note: pause/resume only works with Firefox 4.</p>
-<p>Download the <a href="https://github.com/speich/fileUploader/">demo code from github</a> or <a href="index.php?p=308#more-308">leave a comment</a>.</p>
+<p>Download the <a href="https://github.com/speich/fileUploader/">demo code from github</a> or <a href="http://www.speich.net/articles/?p=308#more-308">leave a comment</a>.</p>
 <script type="text/javascript">
 var djConfig = {
 	parseOnLoad: false,
