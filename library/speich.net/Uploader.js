@@ -198,7 +198,7 @@ dojo.declare('snet.Uploader', null, {
 					}
 				});
 				dojo.connect(bar, 'onRetry', function() {
-					self.upload(file, this);
+					self.resume(file, this);
 				});
 				dojo.connect(bar, 'onResume', function() {
 					self.resume(file, this);
@@ -392,6 +392,7 @@ dojo.declare('snet.Uploader', null, {
 		dojo.connect(req, 'readystatechange', this, function() {
 			var err = null;
 			if (req.readyState == 4) {
+				// upload finished successful
 				if (req.status == 200 || req.status == 201) {
 					window.setTimeout(function() {
 						bar.complete();
@@ -417,13 +418,11 @@ dojo.declare('snet.Uploader', null, {
 						dfd.reject();
 						this.fileStatus.numError++;
 					}
-
 				}
 				req = null;
 				bar.xhr = null;
 			}
 		});
-
 		return dfd;
 	},
 
@@ -451,17 +450,6 @@ dojo.declare('snet.Uploader', null, {
 				}
 			}
 		});
-/*
-		req.upload.addEventListener('progress', function(evt) {   // fires when req.load
-		   console.log('pogress:', evt.loaded, evt.total)
-		}, false);
-		req.upload.addEventListener('load', function(evt) {   // fires when req.load
-		   console.log('req.upload.onload', evt.loaded, evt.total)
-		}, false);
-		req.upload.addEventListener('load', function(evt) {   // fires when req.load
-		  console.log('req.load', evt.loaded, evt.total)
-		}, false)
-		*/
 	},
 
 	/**

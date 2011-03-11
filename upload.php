@@ -29,9 +29,12 @@
 </head>
 
 <body class="claro">
-<h1>HTML5 multiple file upload with dojo and PHP</h1>
-<p>This page uses dojo and PHP to handle multiple file upload with drag and drop. Works with Mozilla Firefox 3.6 and Google Chrome 7.</p>
+<h1>HTML5 demo: Multiple file upload with dojo and PHP</h1>
+<p>This demo uses the dojotoolkit and PHP to handle multiple file upload with drag and drop. It lets you pause/resume your upload even after an error.
+Works with Mozilla Firefox 3.6 and Google Chrome 7.</p>
 <div id="dropTarget"><p>Drop files from your desktop here</p></div>
+<p>Note: pause/resume only works with Firefox 4.</p>
+<p>Download the <a href="https://github.com/speich/fileUploader/">demo code from github</a> or <a href="index.php?p=308#more-308">leave a comment</a>.</p>
 <script type="text/javascript">
 var djConfig = {
 	parseOnLoad: false,

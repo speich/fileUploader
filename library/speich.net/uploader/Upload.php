@@ -88,10 +88,10 @@ class Upload {
 
 			// Uncomment if you want to write to server. Make sure you have the right permissions.
 			$flags = $append ? FILE_APPEND : 0;
-			//$this->numWrittenBytes = file_put_contents($dir.$file->name, $file->content, $flags);
+			$this->numWrittenBytes = file_put_contents($dir.$file->name, $file->content, $flags);
 
 			// In the demo we do not write anything to disk, sleep to fake it so we can show bar.indeterminate on the client
-			sleep(4);
+			//sleep(4);
 			$this->numWrittenBytes = mb_strlen($headers['Content-Length']);
 
 			if ($this->numWrittenBytes !== false) {
