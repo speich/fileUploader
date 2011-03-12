@@ -42,7 +42,7 @@ var djConfig = {
 	locale: 'en',
 	baseUrl: './',
 	modulePaths: {
-		'snet': 'speich.net'
+		'snet': '/speich.net'
 	},
 	useCommentedJson: true
 };
@@ -53,7 +53,7 @@ dojo.require('snet.fileUploader.Uploader');
 
 dojo.ready(function() {
 	var upl = new snet.fileUploader.Uploader({
-		url: dojo.moduleUrl('snet') + '/fileUploader/uploaderfnc.php',
+		url: dojo.moduleUrl('snet') + 'fileUploader/uploaderfnc.php',
 		dropTarget: 'dropTarget',
 		maxKBytes: 5000000,
 		maxNumFiles: 10
