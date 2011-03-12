@@ -3,10 +3,10 @@
  * Date: 11.12.10, v1.0
  */
 dojo.require('snet.DialogConfirm');
-dojo.require('snet.uploader.ProgressBar');
-dojo.provide('snet.Uploader');
+dojo.require('snet.fileUploader.ProgressBar');
+dojo.provide('snet.fileUploader.Uploader');
 
-dojo.declare('snet.Uploader', null, {
+dojo.declare('snet.fileUploader.Uploader', null, {
 	// TODO: after deleting bar also delete items in files and progressBars
 
 	maxKBytes: 3000,	   // in kbytes limited by php.ini directive upload_max_filesize
@@ -173,7 +173,7 @@ dojo.declare('snet.Uploader', null, {
 			(function(i) {
 				var bar, file = self.files[i];
 				div = dojo.create('div', {}, 'pbwBarsCont');
-				bar = new snet.uploader.ProgressBar({
+				bar = new snet.fileUploader.ProgressBar({
 					label: file.name + ', ' + self.formatSize(file.size),
 					bytesTotal: file.size,
 					maximum: file.size,
@@ -361,7 +361,7 @@ dojo.declare('snet.Uploader', null, {
 	 * Upload file via XmlHttpRequest.
 	 * Reads file into binary string and uploads it while displays its progress.
 	 * @param {File} file file to upload
-	 * @param {snet.uploader.ProgressBar} bar progress bar
+	 * @param {snet.fileUploader.ProgressBar} bar progress bar
 	 */
 	upload: function(file, bar) {
 		// Use native XMLHttpRequest instead of XhrGet since dojo 1.5 does not allow to send binary data as per docs
@@ -385,7 +385,7 @@ dojo.declare('snet.Uploader', null, {
 	/**
 	 * Displays upload status and errors.
 	 * @param {XMLHttpRequest} req
-	 * @param {snet.uploader.ProgressBar} bar
+	 * @param {snet.fileUploader.ProgressBar} bar
 	 */
 	setReadyStateChangeEvent: function(req, bar) {
 		var dfd = new dojo.Deferred();
@@ -429,7 +429,7 @@ dojo.declare('snet.Uploader', null, {
 	/**
 	 * Setup the progress event to display upload progress.
 	 * @param {XMLHttpRequest} req
-	 * @param {snet.uploader.ProgressBar} bar
+	 * @param {snet.fileUploader.ProgressBar} bar
 	 * @param {number} [resumeStart]
 	 */
 	setProgressEvent: function(req, bar, resumeStart) {
@@ -455,7 +455,7 @@ dojo.declare('snet.Uploader', null, {
 	/**
 	 * Sends request to delete file on remote server.
 	 * @param {string} fileName name of file to delete
-	 * @param {snet.uploader.ProgressBar} bar
+	 * @param {snet.fileUploader.ProgressBar} bar
 	 * @return {dojo.Deferred}
 	 */
 	deleteFile: function(fileName, bar) {
@@ -479,7 +479,7 @@ dojo.declare('snet.Uploader', null, {
 	/**
 	 * Deletes the uploaded file and removes the bar from the list.
 	 * @param {File} file
-	 * @param {snet.uploader.ProgressBar} bar
+	 * @param {snet.fileUploader.ProgressBar} bar
 	 */
 	del: function(file, bar) {
 		var self = this;
@@ -501,7 +501,7 @@ dojo.declare('snet.Uploader', null, {
 	/**
 	 * Aborts the upload.
 	 * @param {File} file
-	 * @param {snet.uploader.ProgressBar} bar
+	 * @param {snet.fileUploader.ProgressBar} bar
 	 */
 	abort: function(file, bar) {
 		if (bar.xhr) {

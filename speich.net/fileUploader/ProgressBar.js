@@ -3,8 +3,8 @@
  * Date: 11.12.10, v1.0
  */
 dojo.require('dijit.ProgressBar');
-dojo.provide('snet.uploader.ProgressBar');
-dojo.declare('snet.uploader.ProgressBar', dijit.ProgressBar, {
+dojo.provide('snet.fileUploader.ProgressBar');
+dojo.declare('snet.fileIploader.ProgressBar', dijit.ProgressBar, {
 	aborted: false,  // user aborted upload
 	paused: false,
 	statics: {id: 0}, // static variable to create unique widget id, if none is provided

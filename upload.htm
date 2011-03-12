@@ -3,8 +3,8 @@
 <head>
 <title>www.speich.net - HTML5 multiple file uploader with drag and drop.</title>
 <style type="text/css">
-@import "../../library/dojo/dijit/themes/claro/claro.css";
-@import "library/speich.net/fileUploader/resources/uploader.css";
+@import "http://o.aolcdn.com/dojo/1.5/dijit/themes/claro/claro.css";
+@import "speich.net/fileUploader/resources/uploader.css";
 
 #dropTarget {
 	width: 400px;
@@ -40,19 +40,20 @@ var djConfig = {
 	parseOnLoad: false,
 	isDebug: false,
 	locale: 'en',
+	baseUrl: './',
 	modulePaths: {
-		'snet': '../../speich.net'
+		'snet': 'speich.net'
 	},
 	useCommentedJson: true
 };
 </script>
-<script src="library/dojo/dojo/dojo.js" type="text/javascript"></script>
+<script src="http://o.aolcdn.com/dojo/1.5/dojo/dojo.xd.js" type="text/javascript"></script>
 <script type="text/javascript">
-dojo.require('snet.Uploader');
+dojo.require('snet.fileUploader.Uploader');
 
 dojo.ready(function() {
-	var upl = new snet.Uploader({
-		url: '/library/speich.net/uploader/uploaderfnc.php',
+	var upl = new snet.fileUploader.Uploader({
+		url: dojo.moduleUrl('snet') + '/fileUploader/uploaderfnc.php',
 		dropTarget: 'dropTarget',
 		maxKBytes: 5000000,
 		maxNumFiles: 10

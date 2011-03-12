@@ -53,15 +53,16 @@ $fnc = isset($_GET['fnc']) ? $_GET['fnc'] : null;
 switch ($fnc) {
 	case 'upl':
 		if (is_dir($uploadDir)) {
-			if (is_writable($uploadDir)) {
+			// upload directory is not writable in demo
+			// if (is_writable($uploadDir)) {
 				$upl = new Upload();
 				$upl->save($uploadDir);
 				$upl = null;
-			}
-			else {
-				header($protocol.' 405 Method Not Allowed');
-				exit('Upload directory is not writable.');
-			}
+			//}
+			//else {
+			//	header($protocol.' 405 Method Not Allowed');
+			//	exit('Upload directory is not writable.');
+			//}
 		}
 		else {
 			header($protocol.' 404 Not Found');
