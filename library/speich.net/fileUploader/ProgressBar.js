@@ -68,7 +68,7 @@ dojo.declare('snet.uploader.ProgressBar', dijit.ProgressBar, {
 				dfd = this.createThumb(file, newWidth);
 			}
 			else {
-				img.src = dojo.moduleUrl('snet') + '/uploader/resources/icon-image_64.png';
+				img.src = dojo.moduleUrl('snet') + '/fileUploader/resources/icon-image_64.png';
 				img.onload = function() {	 // resize to fit icon
 					newHeight = Math.floor(img.height * newWidth / img.width);
 					img.width = newWidth;
@@ -95,16 +95,16 @@ dojo.declare('snet.uploader.ProgressBar', dijit.ProgressBar, {
 	   }
 		else {
 			if (fileType.match(/video\/*/)) {
-				img.src = dojo.moduleUrl('snet') + '/uploader/resources/icon-video_64.png'
+				img.src = dojo.moduleUrl('snet') + '/fileUploader/resources/icon-video_64.png'
 			}
 			else if (fileType.match(/audio\/*/)) {
-				img.src = dojo.moduleUrl('snet') + '/uploader/resources/icon-audio_64.png'
+				img.src = dojo.moduleUrl('snet') + '/fileUploader/resources/icon-audio_64.png'
 			}
 			else if (fileType.match(/text\/*/)) {
-				img.src = dojo.moduleUrl('snet') + '/uploader/resources/icon-text_64.png'
+				img.src = dojo.moduleUrl('snet') + '/fileUploader/resources/icon-text_64.png'
 			}
 			else {
-				img.src = dojo.moduleUrl('snet') + '/uploader/resources/icon-generic_64.png'
+				img.src = dojo.moduleUrl('snet') + '/fileUploader/resources/icon-generic_64.png'
 			}
 			dojo.place(img, el, 'first');
 		   dfd.resolve(img);

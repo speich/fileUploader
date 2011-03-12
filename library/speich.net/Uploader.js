@@ -26,7 +26,7 @@ dojo.declare('snet.Uploader', null, {
 	rememberConfirmDelete: false, // do not ask user again to confirm deleting
 
 	/**
-	 * Instantiates the uploader.
+	 * Instantiates the fileUploader.
 	 * Expects object with following properties:
 	 *    id:      // {String|Object} DomNode or id of element that the progress bars are created in.
 	 *    url:     // {String} url of php page that handles the upload
@@ -130,7 +130,7 @@ dojo.declare('snet.Uploader', null, {
 			return false;
 		}
 
-		// create uploader container
+		// create fileUploader container
 		strTemplate = '<div id="pbwOverallCont">' +
 			'<div id="pbwBarOverall" class="pbwBar">' +
 				'<div class="pbwTxt">overall progress</div>' +
@@ -604,7 +604,7 @@ dojo.declare('snet.Uploader', null, {
 	},
 
 	/**
-	 * Resets the uploader.
+	 * Resets the fileUploader.
 	 */
 	reset: function() {
 		this.bytesOverall = 0;
