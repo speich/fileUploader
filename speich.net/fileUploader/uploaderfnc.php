@@ -46,7 +46,7 @@ function handleShutdown() {
 set_error_handler('handleError', E_ALL);
 register_shutdown_function('handleShutdown');
 
-$uploadDir = $_SERVER['DOCUMENT_ROOT'].'/speich.net/fileUploader/uploads/';
+$uploadDir = rtrim($_SERVER['DOCUMENT_ROOT']).'/speich.net/fileUploader/uploads/';  // use rtrim since on some OS doc_root is returned without/with a trailing slash
 $protocol = $_SERVER["SERVER_PROTOCOL"];
 
 $fnc = isset($_GET['fnc']) ? $_GET['fnc'] : null;

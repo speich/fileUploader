@@ -344,6 +344,7 @@ dojo.declare('snet.fileUploader.Uploader', null, {
 	uploadFiles: function() {
 		var i = 0, len = this.files.length;
 		for (; i < len; i++) {
+			//this.saveToDb(this.files[i]);
 			this.upload(this.files[i], this.progressBars[i]);
 		}
 		dojo.subscribe('upload/progress/done', this, function() {
@@ -619,6 +620,20 @@ dojo.declare('snet.fileUploader.Uploader', null, {
 		this.progressBars = [];
 	},
 
+	saveToDb: function(file) {
+		var dfd = new dojo.Deferred();
+		var req = mozIndexedDB.open('tempFileUpload', 'Store files before uploading to enable resume');
+		dojo.connect('req', 'success', function() {
+			dfd.resolve(req.result);
+		});
+		dojo.connect('req', 'error', function() {
+			dfd.reject(req.error);
+		});
+		dfd.then(function(db) {
+			console.log(db);
+		});
+	},
+
 	/**
 	 * Format file size.
 	 * @param {Number} bytes
@@ -657,5 +672,6 @@ dojo.declare('snet.fileUploader.Uploader', null, {
 		// taken from has.js
 		return 'draggable' in document.createElement('span');
 	}
+
 });
 
