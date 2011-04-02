@@ -4,10 +4,10 @@
  */
 dojo.require('snet.DialogConfirm');
 dojo.require('snet.fileUploader.ProgressBar');
+dojo.require('snet.fileUploader.TempFileDb');
 dojo.provide('snet.fileUploader.Uploader');
 
 dojo.declare('snet.fileUploader.Uploader', null, {
-	// TODO: after deleting bar also delete items in files and progressBars
 
 	maxKBytes: 3000,	   // in kbytes limited by php.ini directive upload_max_filesize
 	maxNumFiles: 10, 	   // limited by php.ini directive max_file_uploads
@@ -344,7 +344,7 @@ dojo.declare('snet.fileUploader.Uploader', null, {
 	uploadFiles: function() {
 		var i = 0, len = this.files.length;
 		for (; i < len; i++) {
-			//this.saveToDb(this.files[i]);
+		//	this.saveToDb(this.files[i]);
 			this.upload(this.files[i], this.progressBars[i]);
 		}
 		dojo.subscribe('upload/progress/done', this, function() {
@@ -370,16 +370,13 @@ dojo.declare('snet.fileUploader.Uploader', null, {
 		var dfd = this.setReadyStateChangeEvent(req, bar);
 		this.setProgressEvent(req, bar);
 		bar.upload();
-
 		req.open('post', this.url + '?fnc=upl', true);
-		req.overrideMimeType("text/plain; charset=x-user-defined-binary");
 		req.setRequestHeader("Cache-Control", "no-cache");
 		req.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 		req.setRequestHeader("X-File-Name", file.name);
 		req.setRequestHeader("X-File-Size", file.size);
-		req.setRequestHeader("Content-Type", "application/octet-stream; charset=UTF-8");
+//		req.setRequestHeader("Content-Type", "application/octet-stream");
 		req.send(file);
-
 		return dfd;
 	},
 
@@ -569,38 +566,18 @@ dojo.declare('snet.fileUploader.Uploader', null, {
 			var start = (result && result.numWritten) || bar.progress; // bar.progress for demo only
 			var length = file.size - start;
 			var chunk = file.slice(start, length);
-			var reader = new FileReader();
-			dojo.connect(reader, 'load', this, function(evt) {
-				var req = bar.xhr = new XMLHttpRequest();
-				dfd = this.setReadyStateChangeEvent(req, bar);
-				this.setProgressEvent(req, bar, start);
-				bar.upload();
-				req.open('post', this.url + '?fnc=resume', true);
-				req.overrideMimeType("text/plain; charset=x-user-defined-binary");
-				req.setRequestHeader("Cache-Control", "no-cache");
-				req.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-				req.setRequestHeader("X-File-Name", file.name);
-				req.setRequestHeader("X-File-Size", file.size);
-				req.setRequestHeader("Content-Type", "application/octet-stream; charset=UTF-8");
-				req.sendAsBinary(evt.target.result);
-				reader = null;
-			});
-			dojo.connect(reader, 'error', function(evt) {
-				console.debug(evt.target.error);
-				var err = evt.target.error.code;
-				err = {
-					statusCode: 4,
-					statusText: 'NOT_READABLE_ERR',
-					responseText: 'File could not be read.'
-				};
-				bar.error(err);
-			});
-
-			reader.readAsBinaryString(chunk);
+			var req = bar.xhr = new XMLHttpRequest();
+			dfd = this.setReadyStateChangeEvent(req, bar);
+			this.setProgressEvent(req, bar, start);
+			bar.upload();
+			req.open('post', this.url + '?fnc=resume', true);
+			req.setRequestHeader("Cache-Control", "no-cache");
+			req.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+			req.setRequestHeader("X-File-Name", file.name);
+			req.setRequestHeader("X-File-Size", file.size);
+			req.send(chunk);
 			return dfd;
-
 		}));
-
 		return dfd;
 	},
 
@@ -618,20 +595,6 @@ dojo.declare('snet.fileUploader.Uploader', null, {
 		};
 		this.files = [];
 		this.progressBars = [];
-	},
-
-	saveToDb: function(file) {
-		var dfd = new dojo.Deferred();
-		var req = mozIndexedDB.open('tempFileUpload', 'Store files before uploading to enable resume');
-		dojo.connect('req', 'success', function() {
-			dfd.resolve(req.result);
-		});
-		dojo.connect('req', 'error', function() {
-			dfd.reject(req.error);
-		});
-		dfd.then(function(db) {
-			console.log(db);
-		});
 	},
 
 	/**

@@ -48,21 +48,23 @@ register_shutdown_function('handleShutdown');
 
 $uploadDir = rtrim($_SERVER['DOCUMENT_ROOT']).'/speich.net/fileUploader/uploads/';  // use rtrim since on some OS doc_root is returned without/with a trailing slash
 $protocol = $_SERVER["SERVER_PROTOCOL"];
+$demoMode = true;
+$upl = new Upload();
+$upl->setDemoMode($demoMode);
 
 $fnc = isset($_GET['fnc']) ? $_GET['fnc'] : null;
 switch ($fnc) {
 	case 'upl':
 		if (is_dir($uploadDir)) {
-			// upload directory is not writable in demo
-			// if (is_writable($uploadDir)) {
-				$upl = new Upload();
+			// remember: upload directory is not writable in demo
+			if (is_writable($uploadDir) || $demoMode) {
 				$upl->save($uploadDir);
 				$upl = null;
-			//}
-			//else {
-			//	header($protocol.' 405 Method Not Allowed');
-			//	exit('Upload directory is not writable.');
-			//}
+			}
+			else {
+				header($protocol.' 405 Method Not Allowed');
+				exit('Upload directory is not writable.');
+			}
 		}
 		else {
 			header($protocol.' 404 Not Found');
@@ -72,7 +74,6 @@ switch ($fnc) {
 	case 'del':
 		$fileName = isset($_GET['fileName']) ? $_GET['fileName'] : null;
 		if ($fileName) {
-			$upl = new Upload();
 			$upl->delete($fileName, $uploadDir);
 			$upl = null;
 		}
@@ -82,27 +83,26 @@ switch ($fnc) {
 		}
       break;
 	case 'resume':
-		$upl = new Upload();
 		$upl->save($uploadDir, true);
 		$upl = null;
 		break;
 	case 'getNumWrittenBytes':
 		$fileName = isset($_GET['fileName']) ? $_GET['fileName'] : null;
-		// Not possible in demo, since nothing was written to disk...
-/*
-		if ($fileName) {
-			if (file_exists($uploadDir.$fileName)) {
-				echo json_encode(array('numWritten' => filesize($uploadDir.$fileName)));
+		if (!$demoMode) {
+			if ($fileName) {
+				if (file_exists($uploadDir.$fileName)) {
+					echo json_encode(array('numWritten' => filesize($uploadDir.$fileName)));
+				}
+				else {
+					header($protocol.' 404 Not Found');
+					exit('Previous upload not found. Resume not possible.');
+				}
 			}
 			else {
 				header($protocol.' 404 Not Found');
-				exit('Previous upload not found. Resume not possible.');
+				exit('No file name provided.');
 			}
 		}
-		else {
-			header($protocol.' 404 Not Found');
-			exit('No file name provided.');
-		}*/
 		break;
 }
 ?>

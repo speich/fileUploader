@@ -247,7 +247,8 @@ dojo.declare('snet.fileUploader.ProgressBar', dijit.ProgressBar, {
 
 	retry: function() {
 		this.update({
-			indeterminate: false
+			indeterminate: false,
+			progress: 0
 		});
 		this.setState('uploading');
 		this.onRetry();

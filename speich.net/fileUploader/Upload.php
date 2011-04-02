@@ -7,6 +7,16 @@
 class Upload {
 	var $numWrittenBytes = 0;
 	var $fileName = null;
+	var $demoMode = true;
+
+	/**
+	 * Set demo modus.
+	 * @param bool $demoMode
+	 * @return void
+	 */
+	public function setDemoMode($demoMode) {
+		$this->demoMode = $demoMode;
+	}
 
 	/**
 	 * Delete uploaded file.
@@ -17,9 +27,11 @@ class Upload {
 	public function delete($file, $dir) {
 		$protocol = $_SERVER["SERVER_PROTOCOL"];
 
-		// Disable if you want to delete file from server. Make sure you have the right permissions.
-		header($protocol.' 501 Not Implemented');
-		exit('Deleting failed since file was not saved to server in this demo.');
+		// Disable this, if you want to delete file from server. Make sure you have the right permissions.
+		if ($this->demoMode) {
+			header($protocol.' 501 Not Implemented');
+			exit('Deleting failed since file was not saved to server in this demo.');
+		}
 
 		// Important: You should also add a session variable to make sure that a the user can only delete his own files!
 		if (is_file($dir.$file)) {
@@ -56,8 +68,9 @@ class Upload {
 		   exit('Header \'Content-Length\' not set.');
 		}
 
-		if (isset($headers['Content-Type'], $headers['X-File-Size'], $headers['X-File-Name']) &&
-			($headers['Content-Type'] === 'multipart/form-data' || $headers['Content-Type'] === 'application/octet-stream; charset=UTF-8')) {
+		/*if (isset($headers['Content-Type'], $headers['X-File-Size'], $headers['X-File-Name']) &&
+			($headers['Content-Type'] === 'multipart/form-data' || $headers['Content-Type'] === 'application/octet-stream; charset=UTF-8')) {*/
+		if (isset($headers['X-File-Size'], $headers['X-File-Name'])) {
 
 			// Sanitize all uploaded headers before saving to disk
 			// Enable writing to disk at your own risk! Special care needs to be taken, that only the right person can
@@ -88,11 +101,14 @@ class Upload {
 
 			// Uncomment if you want to write to server. Make sure you have the right permissions.
 			$flags = $append ? FILE_APPEND : 0;
-			// $this->numWrittenBytes = file_put_contents($dir.$file->name, $file->content, $flags);
-
-			// In the demo we do not write anything to disk, sleep to fake it so we can show bar.indeterminate on the client
-			sleep(4);
-			$this->numWrittenBytes = mb_strlen($headers['Content-Length']);
+			if ($this->demoMode) {
+			   // In the demo we do not write anything to disk, sleep to fake it so we can show bar.indeterminate on the client
+				sleep(2);
+				$this->numWrittenBytes = mb_strlen($headers['Content-Length']);
+			}
+			else {
+				$this->numWrittenBytes = file_put_contents($dir.$file->name, $file->content, $flags);
+			}
 
 			if ($this->numWrittenBytes !== false) {
 				header($protocol.' 201 Created');
