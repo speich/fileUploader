@@ -4,7 +4,7 @@
  */
 dojo.require('snet.DialogConfirm');
 dojo.require('snet.fileUploader.ProgressBar');
-dojo.require('snet.fileUploader.TempFileDb');
+/*dojo.require('snet.fileUploader.TempFileDb');*/
 dojo.provide('snet.fileUploader.Uploader');
 
 dojo.declare('snet.fileUploader.Uploader', null, {
