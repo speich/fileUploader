@@ -165,7 +165,7 @@ dojo.declare('snet.fileUploader.Uploader', null, {
 		div = dojo.create('div', {}, 'pbwBarOverall');
 		barOverall = new dijit.ProgressBar({
 			maximum: this.bytesOverall,
-			progress: 0
+			value: 0
 		}, div);
 
 		// create containers for individual progress bars
@@ -177,24 +177,30 @@ dojo.declare('snet.fileUploader.Uploader', null, {
 					label: file.name + ', ' + self.formatSize(file.size),
 					bytesTotal: file.size,
 					maximum: file.size,
-					progress: 0
+					value: 0
 				}, div);
 				bar.setIcon(file, 64);
-				dojo.connect(bar, 'onBeforeUpdate', function(props) {
-					var inc = props.progress - this.progress;
-					barOverall.update({
-						progress: barOverall.progress + inc
-					});
+				bar.watch('value', function(valName, valOld, valNew) {
+					var stat, inc;
+					if (valNew != Infinity && valOld != Infinity) {
+						inc = valNew - valOld + barOverall.get('value');
+						barOverall.set('value', inc);
+					}
+					else if (valNew == Infinity) {
+						 stat = self.fileStatus;
+						stat.numProgressDone++;
+						if (stat.numProgressDone + stat.numAborted === len) {
+							barOverall.set('value', Infinity);
+						}
+					}
 				});
 				dojo.connect(bar, 'onComplete', function() {
+					// todo: use bar.watch instead as above
 					var stat = self.fileStatus;
 					stat.numCompleted++;
 					if (stat.numCompleted + stat.numAborted === len) {
 						dojo.addClass(dojo.query('.dijitProgressBarTile', barOverall.domNode)[0], 'pbwBarTileDone');
-						barOverall.update({
-							indeterminate: false,
-							progress: barOverall.maximum
-						});
+						barOverall.set('value', barOverall.maximum);
 					}
 				});
 				dojo.connect(bar, 'onRetry', function() {
@@ -347,15 +353,6 @@ dojo.declare('snet.fileUploader.Uploader', null, {
 		//	this.saveToDb(this.files[i]);
 			this.upload(this.files[i], this.progressBars[i]);
 		}
-		dojo.subscribe('upload/progress/done', this, function() {
-			var stat = this.fileStatus;
-			stat.numProgressDone++;
-			if (stat.numProgressDone + stat.numAborted === len) {
-				this.barOverall.update({
-					indeterminate: true
-				});
-			}
-		});
 	},
 
 	/**
@@ -392,10 +389,10 @@ dojo.declare('snet.fileUploader.Uploader', null, {
 			if (req.readyState == 4) {
 				// upload finished successful
 				if (req.status == 200 || req.status == 201) {
-					window.setTimeout(function() {
+					//window.setTimeout(function() {
 						bar.complete();
 						dfd.resolve();
-					}, 500);
+					//}, 500);
 				}
 				else {
 					// server error or user aborted (canceled)
@@ -431,20 +428,19 @@ dojo.declare('snet.fileUploader.Uploader', null, {
 	 * @param {number} [resumeStart]
 	 */
 	setProgressEvent: function(req, bar, resumeStart) {
-		dojo.connect(req.upload, 'progress', function(evt) {
+		var cnn = dojo.connect(req.upload, 'progress', function(evt) {
 			var loaded = evt.loaded + (resumeStart || 0);
 			if (evt.lengthComputable) {
 				//var num = Math.round((evt.total - loaded) / evt.total * 1000);
 				var num = Math.round(loaded / evt.total * 100); // find better measure, see below
-				bar.update({
-					progress: loaded
-				});
-				if (num == 100 && (!arguments.callee.done === true)) {   // make sure this only gets called once per bar
+				bar.set('value', loaded);
+				if (num == 100 && (!arguments.callee.done === true)) {
 					// TODO: find better ways to decide when we switch to indeterminate
 					// in FF4 never evt.loaded == bar.maximum, but in chrome
+					// see https://bugzilla.mozilla.org/show_bug.cgi?id=637002
 					arguments.callee.done = true;
+					dojo.disconnect(cnn); // make sure this only gets called once per bar => use disconnect
 					bar.wait();  // upload is complete but file has not been written to disk, waits for status 200
-					dojo.publish('upload/progress/done', [bar]); // notify barOverall so it can be set to indeterminate
 				}
 			}
 		});
@@ -506,10 +502,8 @@ dojo.declare('snet.fileUploader.Uploader', null, {
 			bar.xhr.abort();
 		}
 		this.fileStatus.numAborted++;
-		var inc = bar.maximum - bar.progress;
-		this.barOverall.update({
-			progress: this.barOverall.progress + inc
-		});
+		var inc = bar.maximum - bar.value;
+		this.barOverall.set('value', this.barOverall.value + inc);
 		window.setTimeout(dojo.hitch(this, function() {
 			// after aborting some bytes of the file might still be written to the disk on the server,
 			// Unfortunately the delete request cant be sent right away, since there is some lag on the server
@@ -562,11 +556,18 @@ dojo.declare('snet.fileUploader.Uploader', null, {
 		});
 
 		dfd.then(dojo.hitch(this, function(result) {
+			// Blob.slice is temporarily prefixed in Firefox now, because of changed syntax from start, length to start, end
 			var dfd = new dojo.Deferred();
-			var start = (result && result.numWritten) || bar.progress; // bar.progress for demo only
+			var chunk;
+			var start = (result && result.numWritten) || bar.value; // bar.value for demo only
 			var length = file.size - start;
-			var chunk = file.slice(start, length);
 			var req = bar.xhr = new XMLHttpRequest();
+			if ('mozSlice' in file) {
+				chunk = file.mozSlice(start, file.size);  // new parameters start, end instead of length
+			}
+			else {
+				chunk = file.slice(start, length);
+			}
 			dfd = this.setReadyStateChangeEvent(req, bar);
 			this.setProgressEvent(req, bar, start);
 			bar.upload();
@@ -627,8 +628,8 @@ dojo.declare('snet.fileUploader.Uploader', null, {
 	},
 
 	hasBlobSliceSupport: function(file) {
-		// file.slice is not supported by FF3.6
-		return 'slice' in file;
+		// file.slice is not supported by FF3.6 and is prefixed in FF5 now
+		return ('slice' in file || 'mozSlice' in file);
 	},
 
   	hasDnDSupport: function() {
