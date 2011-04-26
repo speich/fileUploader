@@ -5,6 +5,7 @@
 dojo.require('dijit.ProgressBar');
 dojo.provide('snet.fileUploader.ProgressBar');
 dojo.declare('snet.fileUploader.ProgressBar', dijit.ProgressBar, {
+	// TODO: use new dijit.watch
 	aborted: false,  // user aborted upload
 	paused: false,
 	statics: {id: 0}, // static variable to create unique widget id, if none is provided
@@ -191,19 +192,13 @@ dojo.declare('snet.fileUploader.ProgressBar', dijit.ProgressBar, {
 	},
 
 	complete: function() {
-		this.update({
-			indeterminate: false,
-			progress: this.maximum
-		});
+		this.set('value', this.maximum);
 		dojo.byId(this.id + '_msg').innerHTML = 'Done. File saved on server.';
 		this.setState('completed');
 		this.onComplete();
 	},
 
 	upload: function() {
-		this.update({
-			indeterminate: false
-		});
 		dojo.byId(this.id + '_msg').innerHTML = 'Uploading...';
 		this.setState('uploading');
 	},
@@ -246,18 +241,13 @@ dojo.declare('snet.fileUploader.ProgressBar', dijit.ProgressBar, {
 	},
 
 	retry: function() {
-		this.update({
-			indeterminate: false,
-			progress: 0
-		});
+		this.set('value', 0);
 		this.setState('uploading');
 		this.onRetry();
 	},
 
 	wait: function() {
-		this.update({
-			indeterminate: true
-		});
+		this.set('value', Infinity);
 		dojo.byId(this.id + '_msg').innerHTML = 'Uploading done, writing file to server.';
 		this.setState('indeterminated');
 	},
@@ -275,18 +265,6 @@ dojo.declare('snet.fileUploader.ProgressBar', dijit.ProgressBar, {
 				this.onRemove();
 			})
 		}).play();
-	},
-
-	/**
-	 * Sets the progress bars properties, e.g. updates the bar.
-	 * @see dijit.ProgressBar.update for details.
-	 * @param {object} props properties
-	 */
-	update: function(props) {
-		if ('progress' in props) {
-			this.onBeforeUpdate(props);
-		}
-		this.inherited(arguments);
 	},
 
 	/**
@@ -331,11 +309,6 @@ dojo.declare('snet.fileUploader.ProgressBar', dijit.ProgressBar, {
 	 */
 	onError: function() {},
 
-	onRemove: function() {},
+	onRemove: function() {}
 
-	/**
-	 * Callback before updating bar.
-	 * Stub to override
-	 */
-	onBeforeUpdate: function() {}
 });
