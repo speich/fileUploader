@@ -441,7 +441,7 @@ define([
 						// in FF4 never evt.loaded == bar.maximum, but in chrome
 						// see https://bugzilla.mozilla.org/show_bug.cgi?id=637002
 						arguments.callee.done = true;
-						cnn.cancel(); // make sure this only gets called once per bar => use disconnect
+						cnn.remove(); // make sure this only gets called once per bar after upload is completed
 						bar.wait();  // upload is complete but file has not been written to disk, waits for status 200
 					}
 				}
