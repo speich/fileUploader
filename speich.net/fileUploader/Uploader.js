@@ -512,12 +512,12 @@ define([
 			window.setTimeout(lang.hitch(this, function() {
 				// after aborting some bytes of the file might still be written to the disk on the server,
 				// Unfortunately the delete request cant be sent right away, since there is some lag on the server
-				// (file is not written yet)  and the delete would create a 404.
-				// Ugly,  but I just do a the best guess of a 2sec delay to send the delete
+				// (file is not written yet) and the delete would create a 404.
+				// Ugly, but I just do a the best guess of a 2sec delay to send the delete
 				this.deleteFile(file.name || file.fileName, bar);
+				bar.xhr = null;
+				bar = null;
 			}), 2000);
-			bar.xhr = null;
-			bar = null;
 		},
 
 		resume: function(file, bar) {
