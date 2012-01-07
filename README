@@ -1,4 +1,4 @@
-Upload multiple files at once with drag and drop. Uses dojo 1.6 and PHP 5.3.
+Upload multiple files at once with drag and drop. Uses dojo 1.7.1 and PHP 5.3.
 Works with Firefox 3.6 and Google Chrome 7 or greater.
 
-Resume is only supported on Firefox 4.
+Resume is only supported on Firefox 4 or greater.
