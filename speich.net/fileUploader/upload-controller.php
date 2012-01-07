@@ -52,6 +52,7 @@ $demoMode = true;
 $upl = new Upload();
 $upl->setDemoMode($demoMode);
 
+// TODO: use REST instead of query string parameter fnc
 $fnc = isset($_GET['fnc']) ? $_GET['fnc'] : null;
 switch ($fnc) {
 	case 'upl':

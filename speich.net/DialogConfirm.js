@@ -1,80 +1,85 @@
-/**
- * Created by Simon Speich, www.speich.net
- * Date: 02.01.2011, v1.0
- */
-dojo.require("dijit.Dialog");
-dojo.require('dijit.form.Button');
-dojo.require('dijit.form.CheckBox');
-dojo.provide('snet.DialogConfirm');
-dojo.declare('snet.DialogConfirm', dijit.Dialog, {
-	okButton: null,
-	cancelButton: null,
-	skipCheckBox: null,
-	hasOkButton: true,
-	hasCancelButton: true,
-	hasSkipCheckBox: true,
-	dfd: null,
+define([
+	'dojo/_base/lang',
+	'dojo/_base/declare',
+	'dojo/dom-construct',
+	'dojo/_base/Deferred',
+	'dijit/Dialog',
+	'dijit/form/Button',
+	'dijit/form/CheckBox'
+], function(lang, declare, construct, Deferred, Dialog, Button, CheckBox) {
 
-	/**
-	 * Instantiates the confirm dialog.
-	 */
-	constructor: function(props) {
-		this.dfd = new dojo.Deferred();
-		dojo.safeMixin(this, props);
-	},
+	return declare('snet.DialogConfirm', Dialog, {
+		okButton: null,
+		cancelButton: null,
+		skipCheckBox: null,
+		hasOkButton: true,
+		hasCancelButton: true,
+		hasSkipCheckBox: true,
+		hasUnderlay: true,
+		dfd: null,
 
-	/**
-	 * Creates the OK/Cancel buttons.
-	 */
-	postCreate: function() {
-		this.inherited(arguments);
+		/**
+		 * Instantiates the confirm dialog.
+		 */
+		constructor: function(props) {
+			lang.mixin(this, props);
+		},
 
-		var remember = false;
-		var div = dojo.create('div', {
-			className: 'pbwDialogConfirm'
-		}, this.domNode, 'last');
+		/**
+		 * Creates the OK/Cancel buttons.
+		 */
+		postCreate: function() {
+			this.inherited('postCreate', arguments);
 
-		if (this.hasSkipCheckBox) {
-			this.skipCheckBox = new dijit.form.CheckBox({
-				checked: false
-			}, dojo.create('div'));
-			div.appendChild(this.skipCheckBox.domNode);
-			var label = dojo.create('label', {
-				'for': this.skipCheckBox.id,
-				innerHTML: 'Remember my decision and do not ask again.<br/>'
-			}, div);
+			var remember = false;
+			var div = construct.create('div', {
+				className: 'dialogConfirmButtons'
+			}, this.containerNode, 'last');
+			if (this.hasSkipCheckBox) {
+				this.skipCheckBox = new CheckBox({
+					checked: false
+				}, construct.create('div'));
+				div.appendChild(this.skipCheckBox.domNode);
+				var label = construct.create('label', {
+					'for': this.skipCheckBox.id,
+					innerHTML: 'Remember my decision and do not ask again.<br/>'
+				}, div);
+			}
+			if (this.hasOkButton) {
+				this.okButton = new Button({
+					label: 'OK',
+					onClick: lang.hitch(this, function() {
+						remember = this.hasSkipCheckBox ? this.skipCheckBox.get('checked') : false;
+						this.hide();
+						this.dfd.resolve(remember);
+					})
+				}, construct.create('div'));
+				div.appendChild(this.okButton.domNode);
+			}
+			if (this.hasCancelButton) {
+				this.cancelButton = new Button({
+					label: 'Cancel',
+					onClick: lang.hitch(this, function() {
+						remember = this.hasSkipCheckBox ? this.skipCheckBox.get('checked') : false;
+						this.hide();
+						this.dfd.cancel(remember);
+					})
+				}, construct.create('div'));
+				div.appendChild(this.cancelButton.domNode);
+			}
+		},
+
+		/**
+		 * Shows the dialog.
+		 * @return {dojo/_base/Deferred}
+		 */
+		show: function() {
+			this.inherited('show', arguments);
+			if (!this.hasUnderlay) {
+				construct.destroy(this.id + '_underlay');
+			}
+			this.dfd = new Deferred();
+			return this.dfd;
 		}
-		if (this.hasOkButton) {
-			this.okButton = new dijit.form.Button({
-				label: 'OK',
-				onClick: dojo.hitch(this, function() {
-					remember = this.hasSkipCheckBox ? this.skipCheckBox.get('checked') : false;
-					this.hide();
-					this.dfd.resolve(remember);
-				})
-			}, dojo.create('div'));
-			div.appendChild(this.okButton.domNode);
-		}
-		if (this.hasCancelButton) {
-			this.cancelButton = new dijit.form.Button({
-				label: 'Cancel',
-				onClick: dojo.hitch(this, function() {
-					remember = this.hasSkipCheckBox ? this.skipCheckBox.get('checked') : false;
-					this.hide();
-					this.dfd.cancel(remember);
-				})
-			}, dojo.create('div'));
-			div.appendChild(this.cancelButton.domNode);
-
-		}
-	},
-
-	/**
-	 * Shows the dialog.
-	 * @return {dojo.Deferred}
-	 */
-	show: function() {
-		this.inherited(arguments);
-		return this.dfd;
-	}
+	});
 });

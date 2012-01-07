@@ -2,15 +2,13 @@
 <html>
 <head>
 <title>www.speich.net - HTML5 multiple file uploader with drag and drop.</title>
+<link href="http://ajax.googleapis.com/ajax/libs/dojo/1.7.1/dijit/themes/claro/claro.css" rel="stylesheet" type="text/css">
+<link href="../library/speich.net/fileUploader/resources/uploader.css" rel="stylesheet" type="text/css">
 <style type="text/css">
-@import "http://ajax.googleapis.com/ajax/libs/dojo/1.6/dijit/themes/claro/document.css";
-@import "http://ajax.googleapis.com/ajax/libs/dojo/1.6/dijit/themes/claro/claro.css";
-@import "speich.net/fileUploader/resources/uploader.css";
-
 body { padding: 20px; }
-
 #dropTarget {
 	width: 400px;
+	margin: 12px 0;
 	font-size: 10px;
 	text-align: center;
 	min-height: 120px;
@@ -39,28 +37,27 @@ Works with Mozilla Firefox 3.6 and Google Chrome 7.</p>
 <p>Note: pause/resume only works with Firefox 4.</p>
 <p>Download the <a href="https://github.com/speich/fileUploader/">demo code from github</a> or <a href="http://www.speich.net/articles/?p=308#more-308">leave a comment</a>.</p>
 <script type="text/javascript">
-var djConfig = {
-	parseOnLoad: false,
-	isDebug: false,
-	locale: 'en',
-	baseUrl: '/library/dojo/dojo/',
-	modulePaths: {
-		'snet': '/speich.net/'
-	},
-	useCommentedJson: true
+var dojoConfig = {
+	async: true,
+	locale: 'en-us',
+//	baseUrl: '/library/dojo/1.7.1/dojo/',
+	baseUrl: 'http://ajax.googleapis.com/ajax/libs/dojo/1.7.1/dojo/',
+	packages: [
+		{ name: 'snet', location: '/library/speich.net'}
+	]
 };
 </script>
-<!-- <script src="/library/dojo/dojo/dojo.js" type="text/javascript"></script> -->
-<script src="http://ajax.googleapis.com/ajax/libs/dojo/1.6/dojo/dojo.xd.js" type="text/javascript"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/dojo/1.7.1/dojo/dojo.js" type="text/javascript"></script>
+<!--<script src="/library/dojo/1.7.1/dojo/dojo.js" type="text/javascript"></script>-->
 <script type="text/javascript">
-dojo.require('snet.fileUploader.Uploader');
-
-dojo.ready(function() {
-	var upl = new snet.fileUploader.Uploader({
-		url: dojo.moduleUrl('snet') + 'fileUploader/uploaderfnc.php',
-		dropTarget: 'dropTarget',
-		maxKBytes: 80000,
-		maxNumFiles: 10
+require(['dojo/_base/kernel', 'dojo/ready', 'snet/fileUploader/Uploader'], function(kernel, ready, Uploader) {
+	ready(function() {
+		var upl = new Uploader({
+			url: kernel.moduleUrl('snet') + 'fileUploader/upload-controller.php',
+			dropTarget: 'dropTarget',
+			maxKBytes: 10000,
+			maxNumFiles: 10
+		});
 	});
 });
 </script>
