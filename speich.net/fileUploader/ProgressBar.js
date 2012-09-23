@@ -77,7 +77,7 @@ define([
 					dfd = this.createThumb(file, newWidth);
 				}
 				else {
-					img.src = kernel.moduleUrl('snet') + 'fileUploader/resources/icon-image_64.png';
+					img.src = kernel.moduleUrl('snet') + 'fileUploader/resources/mallard.png';
 					img.onload = function() {	 // resize to fit icon
 						newHeight = Math.floor(img.height * newWidth / img.width);
 						img.width = newWidth;
@@ -104,16 +104,16 @@ define([
 			}
 			else {
 				if (fileType.match(/video\/*/)) {
-					img.src = kernel.moduleUrl('snet') + 'fileUploader/resources/icon-video_64.png'
+					img.src = kernel.moduleUrl('snet') + 'fileUploader/resources/icons-64/file-video.png'
 				}
 				else if (fileType.match(/audio\/*/)) {
-					img.src = kernel.moduleUrl('snet') + 'fileUploader/resources/icon-audio_64.png'
+					img.src = kernel.moduleUrl('snet') + 'fileUploader/resources/icons-64/file-audio.png'
 				}
 				else if (fileType.match(/text\/*/)) {
-					img.src = kernel.moduleUrl('snet') + 'fileUploader/resources/icon-text_64.png'
+					img.src = kernel.moduleUrl('snet') + 'fileUploader/resources/icons-64/file-text.png'
 				}
 				else {
-					img.src = kernel.moduleUrl('snet') + 'fileUploader/resources/icon-generic_64.png'
+					img.src = kernel.moduleUrl('snet') + 'fileUploader/resources/icons-64/file.png'
 				}
 				domConstruct.place(img, el, 'first');
 				dfd.resolve(img);
