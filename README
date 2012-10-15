@@ -1,4 +1,0 @@
-Upload multiple files at once with drag and drop. For each file a thumbnail is created automatically. Every upload can be paused, resumed and cancelled individually.
-The file uploader currently uses dojo 1.7.1 and PHP 5.3. It works with Firefox 3.6 and Google Chrome 7 or greater.
-
-Resume is only supported on Firefox 4 or greater.
