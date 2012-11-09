@@ -43,6 +43,7 @@ function handleShutdown() {
 
 // set_error_handler() does not catch fatal errors such as exceeding the allowed memory size
 // -> use register_shutdown_function() in addition
+ob_start();
 set_error_handler('handleError', E_ALL);
 register_shutdown_function('handleShutdown');
 
