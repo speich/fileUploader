@@ -34,6 +34,7 @@ define([
 		progressBars: [], // keeps track of created bars
 		displayTarget: null, // If null, progress is displayed in a dialog, otherwise provide element id
 		dropTarget: null,
+		fileInputField: null,	// id of file input field
 		rememberConfirmDelete: false, // do not ask user again to confirm deleting
 
 		/**
@@ -76,13 +77,17 @@ define([
 					this.addFiles(files);
 					domClass.remove(this.dropTarget, 'targetActive');
 				}));
+				on(dom.byId(props.fileInputField), 'change', lang.hitch(this, function(evt) {
+					var files = evt.target.files;
+					this.addFiles(files);
+				}));
 			}
 		},
 
 		/**
 		 * Add and filter files to upload.
 		 * Add files to internal array and calc total amount of bytes to upload. Also check for size and number of uploads limit.
-		 * @param {Array} files instance of FileList object
+		 * @param {FileList} files instance of FileList object
 		 */
 		addFiles: function(files) {
 			var dfds = [], idx;

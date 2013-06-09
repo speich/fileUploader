@@ -2,8 +2,8 @@
 <html>
 <head>
 <title>www.speich.net - HTML5 multiple file uploader with drag and drop.</title>
-<link href="http://ajax.googleapis.com/ajax/libs/dojo/1.7.1/dijit/themes/claro/document.css" rel="stylesheet" type="text/css">
-<link href="http://ajax.googleapis.com/ajax/libs/dojo/1.7.1/dijit/themes/claro/claro.css" rel="stylesheet" type="text/css">
+<link href="//ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/claro/document.css" rel="stylesheet" type="text/css">
+<link href="//ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/claro/claro.css" rel="stylesheet" type="text/css">
 <link href="speich.net/fileUploader/resources/uploader.css" rel="stylesheet" type="text/css">
 <style type="text/css">
 body { padding: 20px; }
@@ -13,16 +13,12 @@ body { padding: 20px; }
 	text-align: center;
 	min-height: 120px;
 	padding: 6px;
-	-moz-border-radius: 8px;
-	-webkit-border-radius: 8px;
 	border-radius: 8px;
 	border: 1px solid #ccc;
 	background-color: #eee;
 }
 
 .targetActive {
-	-moz-box-shadow: 0 0 15px #006666;
-	-webkit-box-shadow: 0 0 15px #006666;
 	box-shadow: 0 0 15px #006666;
 }
 
@@ -34,27 +30,27 @@ body { padding: 20px; }
 <p>This demo uses the dojotoolkit and PHP to handle multiple file upload with drag and drop. It lets you pause/resume your upload even after an error.
 Works with Mozilla Firefox 3.6 and Google Chrome 7.</p>
 <div id="dropTarget"><p>Drop files from your desktop here</p></div>
+<form><input type="file" id="fldFiles" multiple></form>
 <p>Note: pause/resume only works with Firefox 4.</p>
 <p>Download the <a href="https://github.com/speich/fileUploader/">demo code from github</a> or <a href="http://www.speich.net/articles/?p=308#more-308">leave a comment</a>.</p>
 <script type="text/javascript">
 var dojoConfig = {
 	async: true,
 	locale: 'en-us',
-//	baseUrl: '/library/dojo/1.7.1/dojo/',
-	baseUrl: 'http://ajax.googleapis.com/ajax/libs/dojo/1.7.1/dojo/',
 	packages: [
 		{ name: 'snet', location: '/speich.net'}
 	]
 };
 </script>
-<script src="http://ajax.googleapis.com/ajax/libs/dojo/1.7.1/dojo/dojo.js" type="text/javascript"></script>
-<!--<script src="/library/dojo/1.7.1/dojo/dojo.js" type="text/javascript"></script>-->
+<!--<script src="//ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojo/dojo.js" type="text/javascript"></script>-->
+<script src="/library/dojo/1.9.0/dojo/dojo.js" type="text/javascript"></script>
 <script type="text/javascript">
 require(['dojo/_base/kernel', 'dojo/ready', 'snet/fileUploader/Uploader'], function(kernel, ready, Uploader) {
 	ready(function() {
 		var upl = new Uploader({
 			url: kernel.moduleUrl('snet') + 'fileUploader/upload-controller.php',
 			dropTarget: 'dropTarget',
+			fileInputField: 'fldFiles',
 			maxKBytes: 50000,
 			maxNumFiles: 10
 		});
