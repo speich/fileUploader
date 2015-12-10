@@ -13,10 +13,10 @@ define([
 	'dojo/aspect',
 	'dijit/registry',
 	'dijit/Dialog',
-	'snet/DialogConfirm',
 	'dijit/ProgressBar',
-	'snet/fileUploader/ProgressBar'
-], function(lang, declare, Deferred, array, xhr, dom, domConstruct, domClass, query, has, on, aspect, registry, Dialog, DialogConfirm, ProgressBar, UploadProgressBar) {
+	'../DialogConfirm',
+	'../fileUploader/ProgressBar'
+], function(lang, declare, Deferred, array, xhr, dom, domConstruct, domClass, query, has, on, aspect, registry, Dialog, ProgressBar, DialogConfirm, UploadProgressBar) {
 
 	return declare(null, {
 
