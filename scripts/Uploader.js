@@ -14,8 +14,8 @@ define([
 	'dijit/registry',
 	'dijit/Dialog',
 	'dijit/ProgressBar',
-	'../DialogConfirm',
-	'../fileUploader/ProgressBar'
+	'../library/DialogConfirm',
+	'./ProgressBar'
 ], function(lang, declare, Deferred, array, xhr, dom, domConstruct, domClass, query, has, on, aspect, registry, Dialog, ProgressBar, DialogConfirm, UploadProgressBar) {
 
 	return declare(null, {
