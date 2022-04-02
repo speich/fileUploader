@@ -120,10 +120,10 @@ class Upload
 
     /**
      * @see http://ch2.php.net/manual/en/function.ini-get.php
-     * @param  $val
-     * @return int|string
+     * @param string $val
+     * @return int
      */
-    public function getBytes($val): int|string
+    public function getBytes(string $val): int
     {
         $val = trim($val);
         $last = strtolower($val[strlen($val) - 1]);

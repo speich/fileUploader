@@ -34,7 +34,7 @@ var dojoConfig = {
 require(['dojo/_base/kernel', 'dojo/ready', 'snet/Uploader'], function(kernel, ready, Uploader) {
 	ready(function() {
 		var upl = new Uploader({
-			url: kernel.moduleUrl('snet') + '/../php/upload-controller.php',
+			url: kernel.moduleUrl('snet') + '/../../php/upload-controller.php',
 			dropTarget: 'dropTarget',
 			fileInputField: 'fldFiles',
 			maxKBytes: 50000,
