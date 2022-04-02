@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="af120705-0a17-42be-bb05-bc5dd0f4450e" name="fileUploader@centos" url="http://fileuploader">
+        <fileTransfer host="192.168.1.200" port="22" rootFolder="/media/sf_Websites/fileUploader" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
