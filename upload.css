@@ -1,0 +1,18 @@
+body {
+	padding: 20px;
+	font-size: 1em;
+}
+#dropTarget {
+	width: 400px;
+	margin: 12px 0;
+	text-align: center;
+	min-height: 120px;
+	padding: 6px;
+	border-radius: 8px;
+	border: 1px solid #ccc;
+	background-color: #eee;
+}
+
+.targetActive {
+	box-shadow: 0 0 15px #006666;
+}

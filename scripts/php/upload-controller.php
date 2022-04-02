@@ -12,17 +12,17 @@ require_once('Upload.php');
 /**
  * Custom error handling function.
  * @see http://www.php.net/set_error_handler
- * @param {integer} $errNo
- * @param {string} $errMsg
- * @param {string} $errFile
- * @param {integer} $errLine
+ * @param int $errNo
+ * @param string $errMsg
+ * @param string $errFile
+ * @param int $errLine
  * @return void
  */
-function handleError($errNo, $errMsg, $errFile, $errLine) {
+function handleError(int $errNo, string $errMsg, string $errFile, int $errLine): void {
 	header($_SERVER["SERVER_PROTOCOL"].' 505 Internal Server Error');
 	echo $errMsg;  // do not use exit, since other error_handlers/shutdown_function would not be called
 	// Enable for development only:
-	//echo $errMsg.' in '.$errFile.' on line '.$errLine;
+	echo $errMsg.' in '.$errFile.' on line '.$errLine;
 }
 
 /**
@@ -30,7 +30,7 @@ function handleError($errNo, $errMsg, $errFile, $errLine) {
  * @see http://www.php.net/register_shutdown_function
  * @return void
  */
-function handleShutdown() {
+function handleShutdown(): void {
 	$err = error_get_last();
 	if ($err !== NULL) {
 		ob_end_clean();   // remove fatal error message in response body and replace with own message below
@@ -54,7 +54,7 @@ $upl = new Upload();
 $upl->setDemoMode($demoMode);
 
 // TODO: use REST instead of query string parameter fnc
-$fnc = isset($_GET['fnc']) ? $_GET['fnc'] : null;
+$fnc = $_GET['fnc'] ?? null;
 switch ($fnc) {
 	case 'upl':
 		if (is_dir($uploadDir)) {
@@ -73,7 +73,7 @@ switch ($fnc) {
 		}
       break;
 	case 'del':
-		$fileName = isset($_GET['fileName']) ? $_GET['fileName'] : null;
+		$fileName = $_GET['fileName'] ?? null;
 		if ($fileName) {
 			$upl->delete($fileName, $uploadDir);
 			$upl = null;
@@ -88,11 +88,11 @@ switch ($fnc) {
 		$upl = null;
 		break;
 	case 'getNumWrittenBytes':
-		$fileName = isset($_GET['fileName']) ? $_GET['fileName'] : null;
+		$fileName = $_GET['fileName'] ?? null;
 		if (!$demoMode) {
 			if ($fileName) {
 				if (file_exists($uploadDir.$fileName)) {
-					echo json_encode(array('numWritten' => filesize($uploadDir.$fileName)));
+					echo json_encode(['numWritten' => filesize($uploadDir.$fileName)], JSON_THROW_ON_ERROR);
 				}
 				else {
 					header($protocol.' 404 Not Found');
@@ -106,4 +106,3 @@ switch ($fnc) {
 		}
 		break;
 }
-?>

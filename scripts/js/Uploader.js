@@ -14,9 +14,9 @@ define([
 	'dijit/registry',
 	'dijit/Dialog',
 	'dijit/ProgressBar',
-	'../DialogConfirm',
-	'../fileUploader/ProgressBar'
-], function(lang, declare, Deferred, array, xhr, dom, domConstruct, domClass, query, has, on, aspect, registry, Dialog, ProgressBar, DialogConfirm, UploadProgressBar) {
+	'snet/ProgressBar',
+	'dconf/DialogConfirm',
+], function(lang, declare, Deferred, array, xhr, dom, domConstruct, domClass, query, has, on, aspect, registry, Dialog, ProgressBar, UploadProgressBar, DialogConfirm) {
 
 	return declare(null, {
 
@@ -149,11 +149,11 @@ define([
 
 			// create fileUploader container
 			strTemplate = '<div id="pbwOverallCont">' +
-			'<div id="pbwBarOverall" class="pbwBar">' +
-			'<div class="pbwTxt">overall progress</div>' +
-			'</div>' +
-			'</div>' +
-			'<div id="pbwBarsCont"></div>';
+				'<div id="pbwBarOverall" class="pbwBar">' +
+				'<div class="pbwTxt">overall progress</div>' +
+				'</div>' +
+				'</div>' +
+				'<div id="pbwBarsCont"></div>';
 
 			// display inside dialog pane
 			if (!this.displayTarget) {
@@ -175,7 +175,7 @@ define([
 				container = domConstruct.create('div', {
 					id: 'snetUploader',
 					innerHTML: strTemplate
-				}, this.displayTarget)
+				}, this.displayTarget);
 			}
 
 			// create progress bar for overall progress
@@ -266,7 +266,7 @@ define([
 				id: 'dialogFileSize',
 				title: 'Confirm',
 				content: '<p>Maximum file size is limited to ' + this.formatSize(this.maxKBytes) + '.</p>' +
-				'<p>Press \'OK\' to skip file ' + fileName + '<br/>or press \'Cancel\' to cancel uploading.</p>'
+					'<p>Press \'OK\' to skip file ' + fileName + '<br/>or press \'Cancel\' to cancel uploading.</p>'
 			});
 			return dialog.show();
 		},
@@ -282,7 +282,7 @@ define([
 				id: 'dialogFileSizeSingle',
 				title: 'Confirm',
 				content: 'Maximum file size is limited to ' + this.formatSize(this.maxKBytes) + '. Uploading file ' +
-				fileName + ' will be canceled.</p>',
+					fileName + ' will be canceled.</p>',
 				hasCancelButton: false,
 				hasSkipCheckBox: false
 			});
@@ -300,7 +300,7 @@ define([
 				id: 'dialogNumFileLimit',
 				title: 'Confirm',
 				content: '<p>Maximum number of files to upload is limited to ' + limit + '.</p>' +
-				'<p>Press \'OK\' to upload only the first ' + limit + ' files<br/>or press \'Cancel\' to cancel uploading.</p>',
+					'<p>Press \'OK\' to upload only the first ' + limit + ' files<br/>or press \'Cancel\' to cancel uploading.</p>',
 				hasSkipCheckBox: false
 			});
 			return dialog.show();
@@ -316,7 +316,7 @@ define([
 				id: 'dialogDelete',
 				title: 'Delete',
 				content: '<p>Do you want to delete the uploaded file ' + fileName + ' on the remote server?</p>' +
-				'<p>Press \'OK\' to delete<br/>or press \'Cancel\' to cancel.</p>',
+					'<p>Press \'OK\' to delete<br/>or press \'Cancel\' to cancel.</p>',
 				hasSkipCheckBox: true
 			});
 			return dialog.show();
@@ -348,7 +348,7 @@ define([
 				window.setTimeout(function() {	// TODO: check if this is really necessary
 					// since we might be in progress of already hiding another dialog
 					container.hide();
-				}, container.get('duration') + 20)
+				}, container.get('duration') + 20);
 			}
 		},
 
@@ -376,10 +376,10 @@ define([
 			this.setProgressEvent(req, bar);
 			bar.upload();
 			req.open('post', this.url + '?fnc=upl', true);
-			req.setRequestHeader("Cache-Control", "no-cache");
-			req.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-			req.setRequestHeader("X-File-Name", file.name);
-			req.setRequestHeader("X-File-Size", file.size);
+			req.setRequestHeader('Cache-Control', 'no-cache');
+			req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+			req.setRequestHeader('X-File-Name', file.name);
+			req.setRequestHeader('X-File-Size', file.size);
 			req.send(file);
 			return dfd;
 		},
@@ -488,15 +488,15 @@ define([
 			var fileName = file.name || file.fileName;
 			dfd.resolve(self.rememberConfirmDelete);
 			dfd = dfd.then(
-			function(remember) {
-				if (remember === false) {
-					return self.confirmDelete(fileName);
-				}
-			}).then(
-			function(remember) {
-				self.rememberConfirmDelete = remember;
-				return self.deleteFile(fileName, bar);
-			}).then(function() {
+				function(remember) {
+					if (remember === false) {
+						return self.confirmDelete(fileName);
+					}
+				}).then(
+				function(remember) {
+					self.rememberConfirmDelete = remember;
+					return self.deleteFile(fileName, bar);
+				}).then(function() {
 				bar.remove();
 			});
 			return dfd;
@@ -579,10 +579,10 @@ define([
 				this.setProgressEvent(req, bar, start);
 				bar.upload();
 				req.open('post', this.url + '?fnc=resume', true);
-				req.setRequestHeader("Cache-Control", "no-cache");
-				req.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-				req.setRequestHeader("X-File-Name", file.name);
-				req.setRequestHeader("X-File-Size", file.size);
+				req.setRequestHeader('Cache-Control', 'no-cache');
+				req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+				req.setRequestHeader('X-File-Name', file.name);
+				req.setRequestHeader('X-File-Size', file.size);
 				req.send(chunk);
 				return dfd;
 			}));
@@ -626,9 +626,9 @@ define([
 			}, true) && has.add('file-api', function(global, document, anElement) {
 				return typeof FileReader != 'undefined';
 			}, true) && has.add('native-xhr-uploadevents', function(global, document, anElement) {
-				return has("native-xhr") && ("upload" in new XMLHttpRequest);
+				return has('native-xhr') && ('upload' in new XMLHttpRequest);
 			}, true)) {
-				return true
+				return true;
 			}
 			else {
 				return false;
