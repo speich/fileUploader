@@ -19,7 +19,7 @@ require_once('Upload.php');
  * @return void
  */
 function handleError(int $errNo, string $errMsg, string $errFile, int $errLine): void {
-	header($_SERVER["SERVER_PROTOCOL"].' 505 Internal Server Error');
+    http_response_code(505);
 	echo $errMsg;  // do not use exit, since other error_handlers/shutdown_function would not be called
 	// Enable for development only:
 	echo $errMsg.' in '.$errFile.' on line '.$errLine;
@@ -34,9 +34,9 @@ function handleShutdown(): void {
 	$err = error_get_last();
 	if ($err !== NULL) {
 		ob_end_clean();   // remove fatal error message in response body and replace with own message below
-		header($_SERVER["SERVER_PROTOCOL"].' 505 Internal Server Error');
+        http_response_code(505);
 		// for development only
-		// echo 'Fatal error [SHUTDOWN]: '.$err['message'].' in '.$err['file'].' on line '.$err['line'];
+		echo 'Fatal error [SHUTDOWN]: '.$err['message'].' in '.$err['file'].' on line '.$err['line'];
 		echo $err['message'];
 	}
 }
@@ -63,12 +63,12 @@ switch ($fnc) {
 				$upl = null;
 			}
 			else {
-				header($protocol.' 405 Method Not Allowed');
+                http_response_code(405);
 				exit('Upload directory is not writable.');
 			}
 		}
 		else {
-			header($protocol.' 404 Not Found');
+            http_response_code(404);
 			exit('Upload directory does not exist.');
 		}
       break;
@@ -79,7 +79,7 @@ switch ($fnc) {
 			$upl = null;
 		}
 		else {
-			header($protocol.' 404 Not Found');
+            http_response_code(404);
 			exit('No file name provided.');
 		}
       break;
@@ -95,12 +95,12 @@ switch ($fnc) {
 					echo json_encode(['numWritten' => filesize($uploadDir.$fileName)], JSON_THROW_ON_ERROR);
 				}
 				else {
-					header($protocol.' 404 Not Found');
+                    http_response_code(404);
 					exit('Previous upload not found. Resume not possible.');
 				}
 			}
 			else {
-				header($protocol.' 404 Not Found');
+                http_response_code(404);
 				exit('No file name provided.');
 			}
 		}

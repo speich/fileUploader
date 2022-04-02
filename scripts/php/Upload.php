@@ -28,7 +28,7 @@ class Upload
 
         // Disable this, if you want to delete file from server. Make sure you have the right permissions.
         if ($this->demoMode) {
-            header($protocol.' 501 Not Implemented');
+            http_response_code(501);
             exit('Deleting failed since file was not saved to server in this demo.');
         }
 
@@ -36,15 +36,15 @@ class Upload
         if (is_file($dir.$file)) {
             $succ = unlink($dir.$file);
             if ($succ) {
-                header($protocol.' 200 OK');
+                http_response_code(200);
                 exit('File deleted.');
             }
 
-            header($protocol.'500 Internal Server Error');
+            http_response_code(500);
             exit('Deleting failed');
         }
 
-        header($protocol.' 404 Not Found');
+        http_response_code(404);
         exit('File does not exist.');
     }
 
@@ -58,10 +58,8 @@ class Upload
     public function save(string $dir, bool $append = false): void
     {
         $headers = getallheaders();
-        $protocol = $_SERVER["SERVER_PROTOCOL"];
-
         if (!isset($headers['Content-Length'])) {
-            header($protocol.' 411 Length Required');
+            http_response_code(411);
             exit('Header \'Content-Length\' not set.');
         }
 
@@ -82,7 +80,7 @@ class Upload
             $memoryLimit = $this->getBytes(ini_get('memory_limit'));
             $limit = min($maxUpload, $maxPost, $memoryLimit);
             if ($headers['Content-Length'] > $limit) {
-                header($protocol.' 403 Forbidden');
+                http_response_code(403);
                 exit('File size to big. Limit is '.$limit.' bytes.');
             }
 
@@ -91,14 +89,14 @@ class Upload
 
             // Since I don't know if the header content-length can be spoofed/is reliable, I check the file size again after it is uploaded
             if (mb_strlen($file->content) > $limit) {
-                header($protocol.' 403 Forbidden');
+                http_response_code(403);
                 exit('Nice try.');
             }
 
             // Uncomment if you want to write to server. Make sure you have the right permissions.
             $flags = $append ? FILE_APPEND : 0;
             if ($this->demoMode) {
-                // In the demo we do not write anything to disk, sleep to fake it so we can show bar.indeterminate on the client
+                // In the demo we do not write anything to disk, sleep to fake it, so we can show bar.indeterminate on the client
                 sleep(2);
                 $this->numWrittenBytes = mb_strlen($headers['Content-Length']);
             } else {
@@ -106,15 +104,15 @@ class Upload
             }
 
             if ($this->numWrittenBytes !== false) {
-                header($protocol.' 201 Created');
+                http_response_code(201);
                 exit('File written.');
             }
 
-            header($protocol.' 505 Internal Server Error');
+            http_response_code(505);
             exit('Error writing file');
         }
 
-        header($protocol.' 500 Internal Server Error');
+        http_response_code(500);
         exit('Correct headers are not set.');
     }
 
@@ -125,14 +123,19 @@ class Upload
      */
     public function getBytes(string $val): int
     {
-        $val = trim($val);
-        $last = strtolower($val[strlen($val) - 1]);
-        $val *= match ($last) {
-            'm', 'k', 'g' => 1024,
-        };
-
-        return $val;
-    }
+   		$val = trim($val);
+   		$last = strtolower($val[strlen($val) - 1]);
+   		switch ($last) {
+   			// The 'G' modifier is available since PHP 5.1.0
+   			case 'g':
+   				$val *= 1024;
+   			case 'm':
+   				$val *= 1024;
+   			case 'k':
+   				$val *= 1024;
+   		}
+   		return $val;
+   	}
 
     public function getNumWrittenBytes(): int
     {
