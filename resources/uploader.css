@@ -4,6 +4,10 @@
 	overflow: hidden;
 }
 
+#dropTarget * {
+	pointer-events: none;
+}
+
 #snetUploader .dijitDialogTitleBar {
 	height: 16px;
 }
