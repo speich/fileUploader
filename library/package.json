@@ -9,7 +9,7 @@
     "devDependencies": {
         "copyfiles": "^2.4.1",
         "csso-cli": "^4.0.2",
-        "rimraf": "^5.0.7",
+        "rimraf": "^6.1.2",
         "uglifyjs-folder": "^3.3.0"
     },
     "scripts": {
@@ -25,6 +25,6 @@
         "snet:copy": "VERSION=$(node -p \"require('snet/package.json').version\") && copyfiles -u 2 \"node_modules/snet/**/*\" DialogConfirm/$VERSION",
         "snet:build": "npm run snet:del && npm run snet:copy",
         "cleanup": "rimraf node_modules",
-        "build:keep": "npm run dojo:build && npm run dijit:build && npm run snet:build"
+        "build:keep": "npm run dojo:build && npm run dijit:build && npm run snet:build && npm audit fix"
     }
 }
