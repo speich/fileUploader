@@ -1,6 +1,6 @@
 {
     "name": "file-uploader",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "dependencies": {
         "dijit": "^1.17.3",
         "dojo": "^1.17.3",
