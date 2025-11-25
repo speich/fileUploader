@@ -1,30 +1,31 @@
 {
-    "name": "file-uploader",
-    "version": "1.0.3",
-    "dependencies": {
-        "dijit": "^1.17.3",
-        "dojo": "^1.17.3",
-        "snet": "https://github.com/speich/DialogConfirm"
-    },
-    "devDependencies": {
-        "copyfiles": "^2.4.1",
-        "csso-cli": "^4.0.2",
-        "rimraf": "^6.1.2",
-        "uglifyjs-folder": "^3.3.0"
-    },
-    "scripts": {
-        "dojo:del": "VERSION=$(node -p \"require('dojo/package.json').version\") && rimraf dojo/$VERSION/dojo",
-        "dojo:copy": "VERSION=$(node -p \"require('dojo/package.json').version\") && copyfiles -u 2 -e \"**/tests/**\" -e \"**/testsDOH/**\" \"node_modules/dojo/**/*\" dojo/$VERSION/dojo",
-        "dojo:js": "VERSION=$(node -p \"require('dojo/package.json').version\") && uglifyjs-folder dojo/$VERSION/dojo -eo dojo/$VERSION/dojo -x .js",
-        "dojo:build": "npm run dojo:del && npm run dojo:copy && npm run dojo:js",
-        "dijit:del": "VERSION=$(node -p \"require('dijit/package.json').version\") && rimraf dojo/$VERSION/dijit",
-        "dijit:copy": "VERSION=$(node -p \"require('dijit/package.json').version\") && copyfiles -u 2 -e \"**/tests/**\" -e \"**/tests/**\" \"node_modules/dijit/**/*\" dojo/$VERSION/dijit",
-        "dijit:js": "VERSION=$(node -p \"require('dijit/package.json').version\") && uglifyjs-folder dojo/$VERSION/dijit -eo dojo/$VERSION/dijit -x .js",
-        "dijit:build": "npm run dijit:del && npm run dijit:copy && npm run dijit:js",
-        "snet:del": "VERSION=$(node -p \"require('snet/package.json').version\") && rimraf snet/$VERSION",
-        "snet:copy": "VERSION=$(node -p \"require('snet/package.json').version\") && copyfiles -u 2 \"node_modules/snet/**/*\" DialogConfirm/$VERSION",
-        "snet:build": "npm run snet:del && npm run snet:copy",
-        "cleanup": "rimraf node_modules",
-        "build:keep": "npm run dojo:build && npm run dijit:build && npm run snet:build && npm audit fix"
-    }
+  "name": "file-uploader",
+  "version": "1.0.3",
+  "dependencies": {
+    "dijit": "^1.17.3",
+    "dojo": "^1.17.3",
+    "snet": "https://github.com/speich/DialogConfirm"
+  },
+  "devDependencies": {
+    "esbuild": "0.27.0",
+    "rimraf": "6.1.2"
+  },
+  "scripts": {
+    "dojo:del": "VERSION=$(node -p \"require('dojo/package.json').version\") && rimraf dojo/$VERSION/dojo",
+    "dojo:copy": "VERSION=$(node -p \"require('dojo/package.json').version\") && copyfiles -u 2 -e \"**/tests/**\" -e \"**/testsDOH/**\" \"node_modules/dojo/**/*\" dojo/$VERSION/dojo",
+    "dojo:js": "VERSION=$(node -p \"require('dojo/package.json').version\") && uglifyjs-folder dojo/$VERSION/dojo -eo dojo/$VERSION/dojo -x .js",
+    "_dojo:del": "rimraf dojo/dojo",
+    "_dojo:copycss": "esbuild ./node_modules/dojo/resources/*.css --bundle --minify --sourcemap --external:*.css --loader:.png=copy --loader:.gif=copy --outdir=./dojo/dojo/resources",
+    "_dojo:copyjs": "esbuild ./node_modules/dojo/*.js ./node_modules/dojo/**/*.js ./node_modules/dojo/**/**/*.js ./node_modules/dojo/**/**/**/*.js --platform=node --bundle --minify --sourcemap --external:*.js --format=cjs --outdir=./dojo/dojo",
+    "dojo:build": "npm run _dojo:del && npm run _dojo:copycss && npm run _dojo:copyjs",
+    "_dijit:del": "rimraf dojo/dijit node_modules/dijit/themes/claro/compile.js",
+    "_dijit:copycss": "esbuild ./node_modules/dijit/themes/*.css ./node_modules/dijit/themes/**/*.css ./node_modules/dijit/themes/**/**/*.css --bundle --minify --sourcemap --external:*.css --loader:.png=copy --loader:.gif=copy --outdir=./dojo/dijit/themes && esbuild ./node_modules/dijit/icons/*.css --bundle --minify --sourcemap --external:*.css --loader:.png=copy --loader:.gif=copy --outdir=./dojo/dijit/icons",
+    "_dijit:copyjs": "esbuild ./node_modules/dijit/*.js ./node_modules/dijit/**/*.js ./node_modules/dijit/**/**/*.js ./node_modules/dijit/**/**/**/*.js --platform=node --bundle --minify --sourcemap --external:*.js --format=cjs --outdir=./dojo/dijit",
+    "_dijit:copyhtml": "esbuild ./node_modules/dijit/templates/*.html ./node_modules/dijit/layout/templates/*.html ./node_modules/dijit/form/templates/*.html --loader:.html=copy --outdir=./dojo/dijit",
+    "dijit:build": "npm run _dijit:del && npm run _dijit:copycss && npm run _dijit:copyhtml && npm run _dijit:copyjs",
+    "_snet:del": "VERSION=$(node -p \"require('snet/package.json').version\") && rimraf snet/$VERSION",
+    "_snet:copy": "VERSION=$(node -p \"require('snet/package.json').version\") && copyfiles -u 2 \"node_modules/snet/**/*\" DialogConfirm/$VERSION",
+    "snet:build": "npm run _snet:del && npm run _snet:copy",
+    "build": "npm run dojo:build && npm run dijit:build && npm run snet:build && npm audit fix"
+  }
 }

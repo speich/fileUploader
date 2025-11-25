@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <head>
 <title>www.speich.net - HTML5 multiple file uploader with drag and drop.</title>
-<link href="/library/dojo/1.17.3/dijit/themes/claro/document.css" rel="stylesheet">
-<link href="/library/dojo/1.17.3/dijit/themes/claro/claro.css" rel="stylesheet">
+<link href="/library/dojo/dijit/themes/claro/document.css" rel="stylesheet">
+<link href="/library/dojo/dijit/themes/claro/claro.css" rel="stylesheet">
 <link href="resources/uploader.css" rel="stylesheet">
 <link href="upload.css" rel="stylesheet">
 </head>
@@ -20,21 +20,21 @@
 var dojoConfig = {
 	async: true,
 	locale: 'en-us',
-	baseUrl: '/library/dojo/1.17.3',
+	baseUrl: '/library/dojo',
 	packages: [
 		{name: 'dojo', location: 'dojo'},
 		{name: 'dijit', location: 'dijit'},
-		{name: 'snet', location: '../../../scripts/js'},
-		{name: 'dconf', location: '../../DialogConfirm/1.0.0'}
+		{name: 'snet', location: '../../scripts/js'},
+		{name: 'dconf', location: '../DialogConfirm/1.0.0'}
 	]
 };
 </script>
-<script src="/library/dojo/1.17.3/dojo/dojo.js" type="text/javascript"></script>
+<script src="/library/dojo/dojo/dojo.js"></script>
 <script type="text/javascript">
 require(['dojo/_base/kernel', 'dojo/ready', 'snet/Uploader'], function(kernel, ready, Uploader) {
 	ready(function() {
 		var upl = new Uploader({
-			url: kernel.moduleUrl('snet') + '/../../php/upload-controller.php',
+			url: kernel.moduleUrl('snet') + '/../php/upload-controller.php',
 			dropTarget: 'dropTarget',
 			fileInputField: 'fldFiles',
 			maxKBytes: 50000,
