@@ -23,9 +23,9 @@
     "_dijit:copyjs": "esbuild ./node_modules/dijit/*.js ./node_modules/dijit/**/*.js ./node_modules/dijit/**/**/*.js ./node_modules/dijit/**/**/**/*.js --platform=node --bundle --minify --sourcemap --external:*.js --format=cjs --outdir=./dojo/dijit",
     "_dijit:copyhtml": "esbuild ./node_modules/dijit/templates/*.html ./node_modules/dijit/layout/templates/*.html ./node_modules/dijit/form/templates/*.html --loader:.html=copy --outdir=./dojo/dijit",
     "dijit:build": "npm run _dijit:del && npm run _dijit:copycss && npm run _dijit:copyhtml && npm run _dijit:copyjs",
-    "_snet:del": "VERSION=$(node -p \"require('snet/package.json').version\") && rimraf snet/$VERSION",
+    "_snet:del": "rimraf snet/$VERSION",
     "_snet:copy": "VERSION=$(node -p \"require('snet/package.json').version\") && copyfiles -u 2 \"node_modules/snet/**/*\" DialogConfirm/$VERSION",
     "snet:build": "npm run _snet:del && npm run _snet:copy",
-    "build": "npm run dojo:build && npm run dijit:build && npm run snet:build && npm audit fix"
+    "build": "npm audit fix && npm run dojo:build && npm run dijit:build && npm run snet:build"
   }
 }
