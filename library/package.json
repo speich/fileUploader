@@ -7,7 +7,7 @@
     "snet": "https://github.com/speich/DialogConfirm"
   },
   "devDependencies": {
-    "esbuild": "0.27.0",
+    "esbuild": "0.27.1",
     "rimraf": "6.1.2"
   },
   "scripts": {
